@@ -29,7 +29,7 @@
 ![2](https://github.com/muratonay1/mypayments/assets/34923740/d1b73ecc-e5c4-4547-98cf-d92c9d8024bf)
 
 # Updating
-- Eğer eklediğiniz harcama detayında ya da tutarında bir yanlışlık yaptıysanız veyahut yapılan harcama tutarı değiştiyse hücre bazında değeri güncelleyip "Kaydet" butonuna basmanız yeterli olacaktır. Bu içinde bulunduğunuz döneme, değişliği yansıtacaktır.
+- Eğer eklediğiniz harcama detayında ya da tutarında bir yanlışlık yaptıysanız veyahut yapılan harcama tutarı değiştiyse hücre bazında değeri güncelleyip "Kaydet" butonuna basmanız yeterli olacaktır. Bu içinde bulunduğunuz döneme, değişikliği yansıtacaktır.
 ![2](https://github.com/muratonay1/mypayments/assets/34923740/6b8831aa-8a5c-4cdb-b224-df4a661abdce)
 ![2](https://github.com/muratonay1/mypayments/assets/34923740/eaee0280-a9e5-4916-bd82-515397395697)
 
@@ -39,7 +39,7 @@ Dönem sil butonuna tıkladığınızda içinde bulunduğunuz dönem silinecekti
 ![2](https://github.com/muratonay1/mypayments/assets/34923740/cb367659-0546-485d-a4eb-9a5744348be4)
 
 - Harcama Silme
-Harcama satırına sağ click yaptığımızda açılan menüden remove row tıklayarak seçilen satırı silebilir, ardından kayet tuşuna basarak harcamalarınızı ve tutarınızı güncelleyebilirsiniz.
+Harcama satırına sağ click yaptığımızda açılan menüden remove row tıklayarak seçilen satırı silebilir, ardından kaydet tuşuna basarak harcamalarınızı ve tutarınızı güncelleyebilirsiniz.
 ![2](https://github.com/muratonay1/mypayments/assets/34923740/bbdf2c2a-29de-42d1-941c-941ab8343c10)
 ![2](https://github.com/muratonay1/mypayments/assets/34923740/f8b860bd-e9f6-4100-a2e3-c3525d402737)
 
