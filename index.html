@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<script>
+        document.cookie.split(";").forEach(function(c) {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+    </script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>GLGD INFORMATION</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js" integrity="sha512-L4lHq2JI/GoKsERT8KYa72iCwfSrKYWEyaBxzJeeITM9Lub5vlTj8tufqYk056exhjo2QDEipJrg6zen/DDtoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<link href="index.css" rel="stylesheet">
+	<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+	<script src="PocketRealtime.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/numeraljs/languages/tr.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/handsontable@8.2.0/dist/handsontable.full.min.js">
+	</script>
+	<link href="https://cdn.jsdelivr.net/npm/handsontable@8.2.0/dist/handsontable.full.min.css" rel="stylesheet"
+		media="screen">
+
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+
+<body style="background-color: #433c24;">
+	<h1>
+		<center style="color:rgb(201, 197, 197) ;">Genel Ödeme Periyotları</center>
+	</h1>
+	<div class="container">
+		<!--<div class="loading">Loading&#8230;</div>-->
+		<div class="row">
+			<div style="margin-left: 15px; display: flex; align-items: flex-start; flex:1">
+				<select id="periodDropDown" , name="History" style="    background-color: #7c7c7c;
+				color: whitesmoke; width: 120px; height: 30px;">
+				</select>
+			</div>
+
+			<div style="margin-right: 15px;display: flex;  align-items: flex-end; flex:1;justify-content: end;">
+				<button type="button" class="periodButton newPeriod" id="newPeriod" data-toggle="modal"
+					data-target="#addPeriod" style="background-color: #7c7c7c; color: whitesmoke; border: none;" readonly>Yeni Dönem</button>
+
+				<button type="button" class="periodButton deletePeriod" id="deletePeriod"
+					style="background-color: #e41c1c; color: whitesmoke; margin-left: 2px; border:none">Dönemi Sil</button>
+			</div>
+		</div>
+		<br><br>
+		<div class="handsontable-container" id="grid-table"></div><br>
+		<span style="display: flex; justify-content: center;" id="infoSpan"></span>
+		<div class="deleteInfo" id="deleteInfo"></div><br>
+		<button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-toggle="modal"
+			data-target="#registerModal">Yeni</button>
+		<button type="button" class="mdl-button save" id="save">Kaydet</button>
+		<button type="button" class="mdl-button backup" style="color:whitesmoke;background-color: rgb(23, 23, 39);" id="backup">Get BackUp</button>
+		<button type="button" class="mdl-button statistics" style="color:whitesmoke;background-color: rgb(23, 23, 39);" id="statistics" data-target="#statisticsModal" data-toggle="modal">İstatistikler</button>
+		<button type="button" class="mdl-button funds" style="color:whitesmoke;background-color: rgb(109, 88, 61);" id="funds" data-target="#fundsModal" data-toggle="modal">Birikim Fonları</button>
+		<div class="modal registerModal" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title modal-title-centered" id="myModalLabel">Ödeme Ekleme Paneli</h4>
+						<p id="popup-info-period-msg"></p>
+					</div>
+					<form action="{{ route('register') }}" method="POST">
+						<div class="modal-body">
+							<div class="form-group">
+								<div class="row">
+									<div class="col-md-3"><label for="name">Detay:</label></div>
+									<div class="col-md-9"><input type="text" name="name" class="form-control" id="name"
+											placeholder="Ödeme Detayı Ekleyin..."></div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-md-3"><label for="amount">Tutar:</label></div>
+									<div class="col-md-9"><input type="amount" name="amount" class="form-control"
+											id="amount" placeholder="Ödeme Tutarı Ekleyin..."></div>
+								</div>
+
+								<div class="row" style="display: flex; align-items: center; justify-content: center;">
+									<br><br><label class="infoLabel" style="text-align: center;" for="info"></label>
+								</div>
+
+							</div>
+						</div>
+						<div>
+							<div style="margin: 5px;">
+								<label for="file">Toplu dönem yükle</label><br>
+								<input type="file" id="file" name="file" onchange="readURL(this.value)"/>
+								<button type="button" class="importFile" id="importFile">Yükle</button>
+							</div>
+							<div class="row" style="display: flex; align-items: center; justify-content: center;">
+								<br><br><label class="infoFile" style="text-align: center;" for="infoFile"></label>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-close" data-dismiss="modal">Kapat</button>
+							<button type="button" class="btn btn-primary btn-add">Harcama Ekle</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="modal addPeriod" id="addPeriod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title modal-title-centered" id="myModalLabel">Dönem Ekleme Paneli</h4>
+						<p id="popup-info-period-msg"></p>
+					</div>
+					<form action="{{ route('register') }}" method="POST">
+						<div class="modal-body">
+							<div class="form-group">
+								<div class="row">
+									<div class="col-md-3"><label for="periodName">Dönem Adı:</label></div>
+									<div class="col-md-9"><input type="text" name="name" class="form-control"
+											id="periodName" placeholder="Dönem Adı Girin..."></div>
+								</div>
+								<br>
+								<div class="row" style="display: flex; align-items: center; justify-content: center;">
+									<br><br><label class="infoAddPeriod" style="text-align: center;"
+										for="infoAddPeriod"></label>
+								</div>
+
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-close" data-dismiss="modal">Kapat</button>
+							<button type="button" class="btn btn-primary btn-add-period">Dönem Ekle</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal statisticsModal" id="statisticsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title modal-title-centered" id="myModalLabel">İstatistikler</h4>
+
+					</div>
+					<p id="popup-info-period-msg-count" style="display: flex; justify-content: center; text-align: center;"></p>
+					<p id="popup-info-period-msg-amount" style="display: flex; justify-content: center; text-align: center;"></p>
+					<div class="modal-body">
+						<div class="handsontable-container-statistics" id="grid-table"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-close" data-dismiss="modal">Kapat</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fundsModal" id="fundsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title modal-title-centered" id="myModalLabel">Brikim Fonlarım</h4>
+						<p id="popup-info-period-msg"></p>
+					</div>
+
+					<div class="modal-body">
+						<div class="handsontable-container-funds" id="grid-table"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-close" data-dismiss="modal">Kapat</button>
+						<button type="button" class="btn btn-reCalculate">Yeniden Hesapla</button>
+						<button type="button" class="btn btn-saveFunds">Kaydet</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="utility.js"></script>
+	<script src="throwable.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<script src="methods.js"></script>
+	<script src="index.js"></script>
+	<script src="index.css"></script>
+</body>
+
+</html>
